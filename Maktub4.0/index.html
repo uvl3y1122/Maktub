@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Maktub v4</title>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="http://cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.15.0/vuedraggable.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.5.1/vue-resource.min.js"></script> -->
+
+<!-- CSS & JS --> 
+<link href="css/main.css" rel="stylesheet">
+<script type="text/javascript" src="js/main.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+
+<!-- Add this after vue.js -->
+<script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script> -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" rel="stylesheet">
+<!-- 字型載入 -->
+<style>
+        @import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+        * {
+            font-family: 'Noto Sans TC';
+        }
+</style>
+
+</head>
+    <body>
+    <div id="app">
+        <div class="gulidMenu">
+            <div class="leftSide">
+                <dl class="teamList">
+                    <dd>
+                        <div class="teamTitle">
+                            <span>Team 1</span>
+                            <b>{{team1.length}}</b>
+                        </div>
+                        <ul id="foo1" class="memberInfo">
+                            <draggable  v-model="team1" :options="{group:'member'}">
+                                <transition-group>
+                                <li v-for="(item,index) in team1" :key="item.nickname">
+                                    <div class="member" >
+                                        <select v-model="item.default">
+                                            <option v-for="(i,index) in item.infos" v-if="i.job !== ''" :value="i.idname">{{i.job}}</option>
+                                        </select>
+                                        <p>{{item.default}}</p>
+                                    </div>
+                                </li>
+                                </transition-group>
+                            </draggable>
+                        </ul>
+                    </dd>
+                    <dd>
+                        <div class="teamTitle">
+                            <span>Team 2</span>
+                            <b>{{team2.length}}</b>
+                        </div>
+                        <ul id="foo2" class="memberInfo">
+                            <draggable  v-model="team2" :options="{group:'member'}">
+                                <transition-group>
+                                <li v-for="(item,index) in team2" :key="item.nickname">
+                                    <div class="member" >
+                                        <select v-model="item.default">
+                                            <option v-for="(i,index) in item.infos" v-if="i.job !== ''" :value="i.idname">{{i.job}}</option>
+                                        </select>
+                                        <p>{{item.default}}</p>
+                                    </div>
+                                </li>
+                                </transition-group>
+                            </draggable>
+                        </ul>
+                    </dd>
+                    <dd>
+                        <div class="teamTitle">
+                            <span>Team 3</span>
+                            <b>{{team3.length}}</b>
+                        </div>
+                        <ul id="foo3" class="memberInfo">
+                            <draggable  v-model="team3" :options="{group:'member'}">
+                                <transition-group>
+                                <li v-for="(item,index) in team3" :key="item.nickname">
+                                    <div class="member" >
+                                        <select v-model="item.default">
+                                            <option v-for="(i,index) in item.infos" v-if="i.job !== ''" :value="i.idname">{{i.job}}</option>
+                                        </select>
+                                        <p>{{item.default}}</p>
+                                    </div>
+                                </li>
+                                </transition-group>
+                            </draggable>
+                        </ul>
+                    </dd>
+                    <dd>
+                        <div class="teamTitle">
+                            <span>Team 4</span>
+                            <b>{{team4.length}}</b>
+                        </div>
+                        <ul id="foo4" class="memberInfo">
+                            <draggable  v-model="team4" :options="{group:'member'}" @end="onEnd">
+                                <transition-group>
+                                <li v-for="(item,index) in team4" :key="item.nickname">
+                                    <div class="member" >
+                                        <select v-model="item.default">
+                                            <option v-for="(i,index) in item.infos" v-if="i.job !== ''" :value="i.idname">{{i.job}}</option>
+                                        </select>
+                                        <p>{{item.default}}</p>
+                                    </div>
+                                </li>
+                                </transition-group>
+                            </draggable>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+            <div class="rightSide">
+                <div class="deliverBox">
+                    <ul class="member_item">
+                        <draggable  v-model="dliver" :options="{group:'member'}">
+                            <transition-group>
+                                <li  v-for="(item,index) in dliver" :key="item.nickname">{{item.nickname}}</li>
+                            </transition-group>
+                        </draggable>
+                    </ul>
+                </div>
+                <div class="memberBox">
+                    <div class="searchBar">
+                        <input type="text" v-model="searchWords">
+                    </div>
+                    <ul class="member_item">
+                        <draggable  v-model="memberList" :options="{group:'member'}">
+                            <transition-group>
+                                <li v-for="(item,index) in memberList" :key="item.nickname">{{item.nickname}}</li>
+                            </transition-group>
+                        </draggable>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div> <!-- app end -->
+    <script type="text/javascript">
+
+    var store = new Vuex.Store({
+        state:{
+            isLoading: false,
+        },
+        mutations: {
+            MyMutations(state) {
+                console.log('MyMutations run!');
+                state.Loaded = true;
+            }
+        },
+        actions: {
+
+        }
+    })
+    console.log(store.state.isLoading)
+    // console.log(response);
+
+    store.commit('MyMutations')
+    console.log(store.state.isLoading)
+
+    
+    new Vue({
+    el:'#app',
+    store,
+    data:{
+        memberList:[],
+        team1:[],
+        team2:[],
+        team3:[],
+        team4:[],
+        searchWords:"",
+        dliver:[]
+        },
+  mounted () {
+      const spreadsheetid = '1Bs5HJeDJwcQeKCPuLMgV3B3KpXeHIHaWc4OX3CJ7EI8'
+      const sheetName = '會員名單'
+      const apiKey = 'AIzaSyDqlfj1Js89KjqtiEl5FMOwMQ6QuWK9yT0'
+    axios
+        .get(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetid}/values/${sheetName}?alt=json&key=${apiKey}`)
+        .then(response => {
+            for(var i=0;i<=(response.data.values.length-1);i++){
+                if(response.data.values!= "undefined"){
+                this.memberList.push({
+                    nickname:response.data.values[i+1][0],
+                    infos:[{idname:response.data.values[i+1][1],job:response.data.values[i+1][2]},
+                            {idname:response.data.values[i+1][3],job:response.data.values[i+1][4]},
+                            {idname:response.data.values[i+1][5],job:response.data.values[i+1][6]}],
+                    default:response.data.values[i+1][1]
+                    });
+                }
+            }
+            console.log(response.data.values);
+        })
+        .catch(function (error) {
+            //資料連結失敗
+            console.log(error);
+        });
+  },
+})
+    </script>
+</body>
+</html>
